@@ -111,6 +111,8 @@ class DatabaseHandler(val context: Context) {
             mainItem = cursor.getInt(1)
             mainAmount = String.format("%.2f",cursor.getDouble(2))
         }
+        cursor.close()
+        db.close()
     }
 
     fun countMasterRec(){
@@ -123,6 +125,8 @@ class DatabaseHandler(val context: Context) {
         else{
             masterRec = 0
         }
+        cursor.close()
+        db.close()
     }
 
     fun loadEditKey(){
@@ -144,6 +148,7 @@ class DatabaseHandler(val context: Context) {
             editKeyCount = 0
             editKeyCheck  = 0
         }
+        cursor.close()
         db.close()
     }
 
@@ -165,6 +170,7 @@ class DatabaseHandler(val context: Context) {
                     cursor.getString(5))
                 ViewSummery.add(data)
             }while (cursor.moveToNext())
+            cursor.close()
         }
 
         val query1 = "SELECT count(DISTINCT Date),count(DISTINCT Customer),count(DISTINCT Business_Product),count(DISTINCT Corner),sum(Qty),sum(Price*Qty) FROM transaction_table"
@@ -184,9 +190,9 @@ class DatabaseHandler(val context: Context) {
             val max = amplitudes.maxOrNull() ?: 0
             println("max"+max)
             totalRec = max.toString()
+            cursor1.close()
         }
-
-
+        db.close()
     }
 
     fun loadExport(){
@@ -208,6 +214,8 @@ class DatabaseHandler(val context: Context) {
                 ViewExport.add(data)
             }while (cursor.moveToNext())
         }
+        cursor.close()
+        db.close()
     }
 
     fun loadMaster(){
@@ -232,6 +240,8 @@ class DatabaseHandler(val context: Context) {
         else{
             count = 0
         }
+        cursor.close()
+        db.close()
     }
 
     fun addNew(handcode:String,barcode:String,qty:String,date:String,check:String,cust:String,corner:String,shelf:String,itemCode:String,prc:String,desc:String){
@@ -269,6 +279,7 @@ class DatabaseHandler(val context: Context) {
         values1.put("Description", desc)
         db.insertWithOnConflict("master", null, values1, SQLiteDatabase.CONFLICT_IGNORE)
 
+        cursor.close()
         db.close()
     }
 
@@ -307,15 +318,32 @@ class DatabaseHandler(val context: Context) {
             addBarcode(handcode,barcode,qty,date,check,cust,corner,shelf)
         }
         else{
-            prod = "Master Not Found"
-            item = ""
-            cat = ""
-            price = ""
-            s_price = ""
-            description = ""
-            currentQty = ""
-            println("NotFound")
+            val query1 = "SELECT * FROM master WHERE Product_Code='$barcode' AND Business_Product = '${CheckStockSetup.prod}'"
+            val cursor1 = db.rawQuery(query1,null)
+            if(cursor1.moveToFirst()){
+                prod = cursor1.getString(0)
+                item = cursor1.getString(1)
+                val bc = cursor1.getString(2)
+                cat = cursor1.getString(3)
+                price = cursor1.getString(4)
+                s_price = cursor1.getString(5)
+                description = cursor1.getString(6)
+                addBarcode(handcode,bc,qty,date,check,cust,corner,shelf)
+            }
+            else{
+                prod = "Master Not Found"
+                item = ""
+                cat = ""
+                price = ""
+                s_price = ""
+                description = ""
+                currentQty = ""
+                println("NotFound")
+            }
+            cursor1.close()
         }
+        cursor.close()
+        db.close()
     }
 
     fun addBarcode(handcode:String,barcode:String,qty:String,date:String,check:String,cust:String,corner:String,shelf:String){
@@ -349,11 +377,14 @@ class DatabaseHandler(val context: Context) {
                 val values = ContentValues()
                 values.put("Qty",updateQty)
                 db.update("transaction_table",values,"Product_Code='$item' AND Corner='$corner' AND SHELF = '$shelf'",null)
+                cursor.close()
+                db.close()
             }
             else{
                 println("NONO")
             }
         }
+        db.close()
     }
 
     fun getAll(){
@@ -370,6 +401,8 @@ class DatabaseHandler(val context: Context) {
             allQty = 0
             allAmount = "0.00"
         }
+        cursor.close()
+        db.close()
     }
 
     fun getBP(){
@@ -386,6 +419,8 @@ class DatabaseHandler(val context: Context) {
             bpQty = 0
             bpAmount = "0.00"
         }
+        cursor.close()
+        db.close()
     }
 
     fun getSH(){
@@ -402,6 +437,8 @@ class DatabaseHandler(val context: Context) {
             shQty = 0
             shAmount ="0.00"
         }
+        cursor.close()
+        db.close()
     }
 
     fun getDate(){
@@ -419,6 +456,7 @@ class DatabaseHandler(val context: Context) {
         else{
             viewDataCheck = 0
         }
+        cursor.close()
         db.close()
     }
 
@@ -472,6 +510,10 @@ class DatabaseHandler(val context: Context) {
         }
         else{
         }
+        cursor.close()
+        cursor1.close()
+        cursor2.close()
+        cursor3.close()
         db.close()
     }
 
@@ -500,6 +542,10 @@ class DatabaseHandler(val context: Context) {
         }
         else{
         }
+
+        cursor.close()
+        cursor1.close()
+        db.close()
     }
 
     fun getShelf(corner:String,cust:String,date:String){
@@ -515,6 +561,8 @@ class DatabaseHandler(val context: Context) {
         }
         else{
         }
+        cursor.close()
+        db.close()
     }
 
     fun getShelfData(cust: String, bui:String, corner: String, date: String) {
@@ -536,6 +584,8 @@ class DatabaseHandler(val context: Context) {
         } else {
             shelfCheck = 0
         }
+        cursor.close()
+        db.close()
     }
 
     fun getTotalShelfData(cust: String, bui:String, corner: String, date: String){
@@ -552,6 +602,8 @@ class DatabaseHandler(val context: Context) {
         } else {
             shelfCheck = 0
         }
+        cursor.close()
+        db.close()
     }
 
     fun getSearch(cust: String, bui:String, corner: String, date: String, shelf: String){
@@ -584,6 +636,8 @@ class DatabaseHandler(val context: Context) {
                 searchPrice = cursor1.getString(2)
             }while (cursor1.moveToNext())
         }
+        cursor.close()
+        cursor1.close()
         db.close()
     }
 
@@ -651,6 +705,8 @@ class DatabaseHandler(val context: Context) {
                 searchPrice = cursor1.getString(2)
             }while (cursor1.moveToNext())
         }
+        cursor.close()
+        cursor1.close()
         db.close()
     }
 

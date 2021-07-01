@@ -189,23 +189,23 @@ class CountStock : AppCompatActivity() {
 
         editTextBarcode.setOnKeyListener(View.OnKeyListener { _, _, event ->
             if (event.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
-                buttonView.isEnabled = false
-                buttonEdit.isEnabled = false
-                buttonBack.isEnabled = false
+//                buttonView.isEnabled = false
+//                buttonEdit.isEnabled = false
+//                buttonBack.isEnabled = false
                 if (editTextBarcode.text.toString() == "") {
                     Toast.makeText(this, "Please Enter Barcode", Toast.LENGTH_SHORT).show()
                 } else {
                     scannedBarcode = editTextBarcode.text.toString()
-                    editTextBarcode.text.clear()
+//                    editTextBarcode.text.clear()
                     db.loadBarcode(
-                            CheckStockSetup.h,
-                            scannedBarcode,
-                            editTextQty.text.toString(),
-                            "${CheckStockSetup.date}",
-                            "H",
-                            "${CheckStockSetup.cust}",
-                            "${CheckStockSetup.c}",
-                            "${CheckStockSetup.s}"
+                        CheckStockSetup.h,
+                        scannedBarcode,
+                        editTextQty.text.toString(),
+                        "${CheckStockSetup.date}",
+                        "H",
+                        "${CheckStockSetup.cust}",
+                        "${CheckStockSetup.c}",
+                        "${CheckStockSetup.s}"
                     )
                     println(DatabaseHandler.currentQty)
                     textViewDesc.text = "${DatabaseHandler.description}"
@@ -234,20 +234,20 @@ class CountStock : AppCompatActivity() {
 
                     }
                     if (checkBox.isChecked) {
-//                        editTextBarcode.nextFocusDownId= editTextQty.id
+                        editTextBarcode.nextFocusDownId= editTextQty.id
                         editTextQty.requestFocus()
                     } else {
                         editTextBarcode.requestFocus()
-                        editTextBarcode.setSelectAllOnFocus(true)
-//                        editTextBarcode.nextFocusDownId= editTextBarcode.id
+                        editTextBarcode.selectAll()
+                        editTextBarcode.nextFocusDownId= editTextBarcode.id
                     }
                 }
-                val handler = Handler()
-                handler.postDelayed(Runnable {
-                    buttonView.isEnabled = true
-                    buttonEdit.isEnabled = true
-                    buttonBack.isEnabled = true
-                }, 1) // 5000ms
+//                val handler = Handler()
+//                handler.postDelayed(Runnable {
+//                    buttonView.isEnabled = true
+//                    buttonEdit.isEnabled = true
+//                    buttonBack.isEnabled = true
+//                }, 1) // 5000ms
             }
             false
         })
@@ -258,16 +258,16 @@ class CountStock : AppCompatActivity() {
                     Toast.makeText(this, "Please Enter Barcode", Toast.LENGTH_SHORT).show()
                 } else {
                     scannedBarcode = editTextBarcode.text.toString()
-                    editTextBarcode.text.clear()
+//                    editTextBarcode.text.clear()
                     db.loadBarcode(
-                            CheckStockSetup.h,
-                            scannedBarcode,
-                            editTextQty.text.toString(),
-                            "${CheckStockSetup.date}",
-                            "H",
-                            "${CheckStockSetup.cust}",
-                            "${CheckStockSetup.c}",
-                            "${CheckStockSetup.s}"
+                        CheckStockSetup.h,
+                        scannedBarcode,
+                        editTextQty.text.toString(),
+                        "${CheckStockSetup.date}",
+                        "H",
+                        "${CheckStockSetup.cust}",
+                        "${CheckStockSetup.c}",
+                        "${CheckStockSetup.s}"
                     )
                     println(DatabaseHandler.currentQty)
                     textViewDesc.text = "${DatabaseHandler.description}"
@@ -295,7 +295,9 @@ class CountStock : AppCompatActivity() {
                         textViewShAmount.text = "${DatabaseHandler.shAmount}"
                         if (checkBox.isChecked) {
                             editTextQty.requestFocus()
+                            editTextQty.selectAll()
                         } else {
+                            editTextBarcode.selectAll()
                             editTextBarcode.requestFocus()
                         }
                     }
@@ -309,16 +311,16 @@ class CountStock : AppCompatActivity() {
                 Toast.makeText(this, "Please Enter Barcode", Toast.LENGTH_SHORT).show()
             } else {
                 scannedBarcode = editTextBarcode.text.toString()
-                editTextBarcode.text.clear()
+//                editTextBarcode.text.clear()
                 db.loadBarcode(
-                        CheckStockSetup.h,
-                        scannedBarcode,
-                        editTextQty.text.toString(),
-                        "${CheckStockSetup.date}",
-                        "H",
-                        "${CheckStockSetup.cust}",
-                        "${CheckStockSetup.c}",
-                        "${CheckStockSetup.s}"
+                    CheckStockSetup.h,
+                    scannedBarcode,
+                    editTextQty.text.toString(),
+                    "${CheckStockSetup.date}",
+                    "H",
+                    "${CheckStockSetup.cust}",
+                    "${CheckStockSetup.c}",
+                    "${CheckStockSetup.s}"
                 )
                 textViewDesc.text = "${DatabaseHandler.description}"
                 textViewItem.text = "${DatabaseHandler.prod}${DatabaseHandler.item}"
@@ -346,8 +348,10 @@ class CountStock : AppCompatActivity() {
                     textViewShAmount.text = "${DatabaseHandler.shAmount}"
                     if (checkBox.isChecked) {
                         editTextQty.requestFocus()
+                        editTextQty.selectAll()
                     } else {
                         editTextBarcode.requestFocus()
+                        editTextBarcode.selectAll()
                     }
                 }
 
@@ -389,17 +393,17 @@ class CountStock : AppCompatActivity() {
             }
             else{
                 db.addNew(
-                        CheckStockSetup.h,
-                        editTextBc.text.toString(),
-                        editTextQt.text.toString(),
-                        "${CheckStockSetup.date}",
-                        "H",
-                        "${CheckStockSetup.cust}",
-                        "${CheckStockSetup.c}",
-                        "${CheckStockSetup.s}",
-                        editTextItem.text.toString(),
-                        editTextPrc.text.toString(),
-                        editTextDesc.text.toString()
+                    CheckStockSetup.h,
+                    editTextBc.text.toString(),
+                    editTextQt.text.toString(),
+                    "${CheckStockSetup.date}",
+                    "H",
+                    "${CheckStockSetup.cust}",
+                    "${CheckStockSetup.c}",
+                    "${CheckStockSetup.s}",
+                    editTextItem.text.toString(),
+                    editTextPrc.text.toString(),
+                    editTextDesc.text.toString()
                 )
 
                 textViewDesc.text = editTextDesc.text.toString()

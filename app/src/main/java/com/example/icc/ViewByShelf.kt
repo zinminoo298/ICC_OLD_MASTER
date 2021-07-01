@@ -19,9 +19,9 @@ class ViewByShelf : AppCompatActivity() {
         lateinit var textViewC: TextView
         lateinit var textViewS: TextView
         lateinit var textViewDate: TextView
-        private lateinit var textViewRec: TextView
-        private lateinit var textViewQty: TextView
-        private lateinit var textViewPrice: TextView
+        lateinit var textViewRec: TextView
+        lateinit var textViewQty: TextView
+        lateinit var textViewPrice: TextView
         private lateinit var recyclerView: RecyclerView
         private lateinit var viewAdapter: RecyclerView.Adapter<*>
         private lateinit var viewManager: RecyclerView.LayoutManager
@@ -42,7 +42,7 @@ class ViewByShelf : AppCompatActivity() {
         textViewCust.text = CheckStockSetup.cust
         textViewProd.text = CheckStockSetup.prod
         textViewC.text = CheckStockSetup.c
-        textViewS.text = CheckStockSetup.s
+        textViewS.text = "ALL"
         textViewDate.text = CheckStockSetup.date
         textViewRec.text = "Total Record : "+DatabaseHandler.shelfTotal
         textViewQty.text = "Total Qty : "+DatabaseHandler.shelfQty

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.icc.*
 import com.example.icc.DataBase.DatabaseHandler
 import com.example.icc.Model.ViewShelfModel
+import java.lang.Exception
 import java.util.ArrayList
 
 class ViewShelfAdapter(
@@ -83,10 +84,10 @@ class ViewShelfAdapter(
                 override fun doInBackground(vararg params: Int?): Int? {
                     db1 = DatabaseHandler(context)
                     db1.getSearch(CheckStockSetup.cust,
-                    CheckStockSetup.prod,
-                    CheckStockSetup.c,
-                    CheckStockSetup.date,
-                    CheckStockSetup.s)
+                        CheckStockSetup.prod,
+                        CheckStockSetup.c,
+                        CheckStockSetup.date,
+                        CheckStockSetup.s)
                     return null
                 }
 
@@ -94,8 +95,62 @@ class ViewShelfAdapter(
             }.execute()
         }
 
-        println()
+        holder.view.setOnLongClickListener(View.OnLongClickListener {
+            alertDialog(
+                CheckStockSetup.cust,
+                CheckStockSetup.prod,
+                CheckStockSetup.c,
+                Dataset[position].location!!,
+                position
+            )
+            true
+        })
+    }
 
+    private fun alertDialog(cust: String, prod: String, corner: String, shelf:String, position: Int) {
+        val builder = AlertDialog.Builder(context)
+
+        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val view = inflater.inflate(R.layout.delete, null)
+        builder.setView(view)
+        dialog = builder.create()
+        dialog.setMessage("Do you want to delete?")
+        progressBar1 = view.findViewById(R.id.progress_bar)
+        progressBar1!!.visibility = View.GONE
+        dialog.show()
+        dialog.setCancelable(false)
+
+        buttonYes = view.findViewById(R.id.btn_yes)
+        buttonNo = view.findViewById(R.id.btn_no)
+
+        buttonYes.setOnClickListener {
+            progressBar1!!.visibility = View.VISIBLE
+            buttonYes.isEnabled = false
+            buttonNo.isEnabled = false
+            db1 = DatabaseHandler(context)
+            val db = context.openOrCreateDatabase("database.db", Context.MODE_PRIVATE, null)
+            try{
+                db.execSQL("delete from transaction_table WHERE Customer='$cust' AND Business_Product='$prod' AND Corner='$corner' AND Shelf='$shelf'" )
+            }
+            catch (e:Exception){
+                println(e)
+            }
+            db1.getTotalShelfData(CheckStockSetup.cust,CheckStockSetup.prod,CheckStockSetup.c,CheckStockSetup.date)
+            ViewByShelf.textViewRec.text = "Total Record : "+DatabaseHandler.shelfTotal
+            ViewByShelf.textViewQty.text = "Total Qty : "+DatabaseHandler.shelfQty
+            ViewByShelf.textViewPrice.text ="Total Price : "+ DatabaseHandler.shelfPrice
+            buttonYes.isEnabled = true
+            buttonNo.isEnabled = true
+            Dataset.removeAt(position)
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position, Dataset.size)
+            progressBar1!!.visibility = View.GONE
+            dialog.dismiss()
+        }
+
+        buttonNo.setOnClickListener {
+            dialog.dismiss()
+        }
     }
 
     override fun getItemCount() = Dataset.size
