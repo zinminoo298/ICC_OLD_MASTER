@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         imageViewImport.setOnClickListener {
-            val intent = Intent(this, Import::class.java)
+            val intent = Intent(this, SelectImport::class.java)
             startActivity(intent)
         }
 

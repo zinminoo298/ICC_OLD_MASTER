@@ -10,6 +10,7 @@ import android.widget.Toast
 import com.example.icc.Adapters.ViewShelfAdapter
 import com.example.icc.CheckStockSetup
 import com.example.icc.Model.*
+import com.example.icc.ViewTransEnd
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -18,6 +19,7 @@ class DatabaseHandler(val context: Context) {
 
     companion object{
         val REAL_DATABASE = "database.db"
+        val ViewTransEnd = ArrayList<ViewTransEndModel>()
         var ViewMaster = ArrayList<ViewModel>()
         var ViewSummery = ArrayList<ViewSummeryModel>()
         var ViewExport = ArrayList<ViewExportModel>()
@@ -50,6 +52,7 @@ class DatabaseHandler(val context: Context) {
         var totalQty = ""
         var totalPrice = ""
         var masterRec = 0
+        var transendRec = 0
         var category = ""
         var mainQty = 0
         var mainItem = 0
@@ -110,6 +113,19 @@ class DatabaseHandler(val context: Context) {
             mainQty = cursor.getInt(0)
             mainItem = cursor.getInt(1)
             mainAmount = String.format("%.2f",cursor.getDouble(2))
+        }
+        cursor.close()
+        db.close()
+    }
+
+    fun countTransEnd(){
+        val db = context.openOrCreateDatabase(REAL_DATABASE,Context.MODE_PRIVATE,null)
+        val query = "SELECT count(*) from transaction_table "
+        val cursor = db.rawQuery(query,null)
+        transendRec = if(cursor.moveToFirst()){
+            cursor.getInt(0)
+        } else{
+            0
         }
         cursor.close()
         db.close()
@@ -213,6 +229,38 @@ class DatabaseHandler(val context: Context) {
                     cursor.getString(5))
                 ViewExport.add(data)
             }while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+    }
+
+    fun loadTransEnd(){
+        ViewTransEnd.clear()
+        val db = context.openOrCreateDatabase(REAL_DATABASE,Context.MODE_PRIVATE,null)
+        val query = "SELECT Customer,Business_Product,Product_Code,Qty,Price,(Price*Qty),Barcode,Date,Check_type,Hand_Code,Shelf,Corner,Category,Description From transaction_table ORDER BY Date ASC"
+        val cursor = db.rawQuery(query,null)
+        if(cursor.moveToFirst()){
+            do{
+                count++
+                val data = ViewTransEndModel(cursor.getString(0),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    cursor.getString(4),
+                    cursor.getString(5),
+                    cursor.getString(6),
+                    cursor.getString(7),
+                    cursor.getString(8),
+                    cursor.getString(9),
+                    cursor.getString(10),
+                    cursor.getString(11),
+                    cursor.getString(12),
+                    cursor.getString(13))
+                ViewTransEnd.add(data)
+            }while (cursor.moveToNext())
+        }
+        else{
+            count = 0
         }
         cursor.close()
         db.close()

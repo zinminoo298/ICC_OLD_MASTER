@@ -27,7 +27,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:weightSum="1"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:background="#add8e6">
 
                 <View
                     android:layout_width="1dp"

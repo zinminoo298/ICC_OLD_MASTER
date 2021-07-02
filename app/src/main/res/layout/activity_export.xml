@@ -151,7 +151,7 @@
                         android:gravity="center|left"
                         android:padding="5dp"
                         android:singleLine="true"
-                        android:text="PRICE"
+                        android:text="Item"
                         android:textColor="#000000" />
                     <View
                         android:layout_width="1dp"

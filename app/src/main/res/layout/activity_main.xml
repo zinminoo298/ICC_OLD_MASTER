@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="I.C.C. International PCL.(23/06/2021)"
+            android:text="I.C.C. International PCL.(02/07/2021)"
             android:textColor="#000000"/>
 
         <LinearLayout
