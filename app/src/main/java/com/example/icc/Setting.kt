@@ -1,17 +1,23 @@
 package com.example.icc
 
 import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.view.View.OnTouchListener
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import com.example.icc.Adapters.SpinnerAdapter
+import com.example.icc.DataBase.DatabaseHandler
+
 
 class Setting : AppCompatActivity() {
     companion object{
         lateinit var checkBoxFtp: RadioButton
         lateinit var checkBoxInternal: RadioButton
         lateinit var editTextDevice: EditText
-        lateinit var editTextIp: EditText
+        lateinit var editTextIp: AutoCompleteTextView
         lateinit var buttonSave: Button
+        lateinit var db:DatabaseHandler
         var checkedBox = ""
         var device_name = ""
         var ip = ""
@@ -20,9 +26,12 @@ class Setting : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
 
+        db = DatabaseHandler(this)
+
         loadCheckedBox()
         loadDevice()
         loadIp()
+        db.getIp()
 
         checkBoxFtp = findViewById(R.id.checkbox_ftp)
         checkBoxInternal = findViewById(R.id.checkbox_internal)
@@ -51,9 +60,20 @@ class Setting : AppCompatActivity() {
             setDevice(editTextDevice.text.toString())
             setIp(editTextIp.text.toString())
             setCheckedBox(checkedBox)
-            Toast.makeText(this,"Setting Saved",Toast.LENGTH_SHORT).show()
+            db.saveIp(editTextIp.text.toString())
+            Toast.makeText(this, "Setting Saved", Toast.LENGTH_SHORT).show()
         }
 
+
+        editTextIp.setAdapter(SpinnerAdapter(this, R.layout.spinner_row, DatabaseHandler.IpList, DatabaseHandler.IpList))
+        editTextIp.threshold = 0
+        editTextIp.setOnTouchListener(OnTouchListener { paramView, paramMotionEvent ->
+            if(DatabaseHandler.IpList.isNotEmpty()){
+                editTextIp.showDropDown()
+                editTextIp.requestFocus()
+            }
+            false
+        })
     }
 
     private fun setDevice(v: String) {

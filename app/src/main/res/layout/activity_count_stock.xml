@@ -16,8 +16,8 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.166"
-            android:text="CUST:"/>
+            android:layout_weight="0.33"
+            android:text="CUSTOMER:"/>
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
@@ -25,8 +25,8 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.166"
-            android:text="PROD:"/>
+            android:layout_weight="0.33"
+            android:text="PRODUCT:"/>
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
@@ -34,35 +34,8 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.146"
-            android:text="H:"/>
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#FFFFFF"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.166"
-            android:text="C:"/>
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#FFFFFF"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.166"
-            android:text="S:"/>
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#FFFFFF"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.166"
-            android:text="DATE:"/>
+            android:layout_weight="0.33"
+            android:text="HAND CODE:"/>
 
     </LinearLayout>
 
@@ -77,7 +50,7 @@
             android:id="@+id/txt_cust"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.166"
+            android:layout_weight="0.33"
             android:singleLine="true"
             android:text="0002"/>
         <View
@@ -88,7 +61,7 @@
             android:id="@+id/txt_prod"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.166"
+            android:layout_weight="0.33"
             android:singleLine="true"
             android:text="AIL000"/>
         <View
@@ -99,10 +72,49 @@
             android:id="@+id/txt_h"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.146"
+            android:layout_weight="0.33"
             android:singleLine="true"
             android:text="01"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        android:background="#add8e6">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:text="Corner:"/>
         <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:text="SHELF:"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:text="DATE:"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        android:background="#70add8e6">
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:background="#FFFFFF"/>
@@ -110,7 +122,7 @@
             android:id="@+id/txt_c"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.166"
+            android:layout_weight="0.33"
             android:singleLine="true"
             android:text="001"/>
         <View
@@ -121,7 +133,7 @@
             android:id="@+id/txt_s"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.166"
+            android:layout_weight="0.33"
             android:singleLine="true"
             android:text="F314"/>
         <View
@@ -132,7 +144,7 @@
             android:id="@+id/txt_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.186"
+            android:layout_weight="0.33"
             android:singleLine="true"
             android:text="19/04/21"/>
 
@@ -142,7 +154,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="1"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="5dp">
 
         <TextView
             android:layout_width="0dp"
@@ -282,7 +294,7 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:weightSum="1"
         android:background="#add8e6">
 
@@ -502,7 +514,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="1"
-        android:padding="10dp">
+        android:padding="1dp">
 
         <View
             android:layout_width="0dp"

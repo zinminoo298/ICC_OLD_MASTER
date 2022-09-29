@@ -54,9 +54,9 @@ class MainActivity : AppCompatActivity() {
         db.getMainSummery()
 
         if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED) {
+                        this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED) {
         } else {
             requestStoragePermission();
         }
@@ -144,7 +144,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onPostExecute(result: Int?) {
                     pgd.dismiss()
                     if(DatabaseHandler.editKeyCheck== 0){
-                         Toast()
+                        Toast()
                     }
                     else{
                         val intent = Intent(this@MainActivity,EditKey::class.java)
@@ -174,18 +174,14 @@ class MainActivity : AppCompatActivity() {
         builder.setCancelable(false)
 
         builder.setPositiveButton(
-            "Yes"
+                "Yes"
         ) { dialog, id ->
-            val db = this.openOrCreateDatabase("database.db", Context.MODE_PRIVATE, null)
-            db.execSQL("delete from transaction_table")
-            db.execSQL("VACUUM")
-            textViewQty.text = "Qty :0"
-            textViewItem.text ="Item : 0"
-            textViewAmount.text = "$ : 0.00"
+            dialog.dismiss()
+            AsyncClear(this).execute()
         }
 
         builder.setNegativeButton(
-            "No"
+                "No"
         ) { dialog, id -> dialog.cancel() }
 
         val alert: AlertDialog = builder.create()
@@ -195,27 +191,27 @@ class MainActivity : AppCompatActivity() {
 
     private fun requestStoragePermission(){
         if(ActivityCompat.shouldShowRequestPermissionRationale(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )){
+                        this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )){
             ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), STORAGE_PERMISSION_CODE
+                    this,
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), STORAGE_PERMISSION_CODE
             )
         }
 
         else {
             ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), STORAGE_PERMISSION_CODE
+                    this,
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), STORAGE_PERMISSION_CODE
             )
         }
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
+            requestCode: Int,
+            permissions: Array<String>,
+            grantResults: IntArray
     ) {
         if (requestCode == STORAGE_PERMISSION_CODE) {
             if (grantResults.size>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -232,6 +228,50 @@ class MainActivity : AppCompatActivity() {
         textViewItem.text ="Item : "+DatabaseHandler.mainItem.toString()
         textViewAmount.text = "$ : "+DatabaseHandler.mainAmount.toString()
         super.onRestart()
+    }
+
+    private class AsyncClear(var context: Context): AsyncTask<String, String, String>() {
+
+
+        internal lateinit var db: DatabaseHandler
+        internal lateinit var pgd: ProgressDialog
+        var resp: String? = null
+        var state = ""
+        var cancel: String? = null
+
+
+        override fun doInBackground(vararg params: String?): String {
+            db = DatabaseHandler(context)
+            resp = "Asyn Working"
+            println(resp)
+            try {
+                val db = context.openOrCreateDatabase("database.db", Context.MODE_PRIVATE, null)
+                db.execSQL("delete from transaction_table")
+                db.execSQL("VACUUM")
+            } catch (e: Exception) {
+                println(e)
+            }
+            return resp!!
+        }
+
+        override fun onPostExecute(result: String?) {
+            pgd.dismiss()
+            Toast.makeText(context,"Clear Data Completed",Toast.LENGTH_SHORT).show()
+            textViewQty.text = "Qty :0"
+            textViewItem.text ="Item : 0"
+            textViewAmount.text = "$ : 0.00"
+            super.onPostExecute(result)
+        }
+
+        override fun onPreExecute() {
+            pgd = ProgressDialog(context)
+            pgd.setMessage("Please Wait")
+            pgd.setTitle("Clearing Data")
+            pgd.show()
+            pgd.setCancelable(false)
+
+            super.onPreExecute()
+        }
     }
 
 }

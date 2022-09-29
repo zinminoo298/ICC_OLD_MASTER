@@ -45,7 +45,7 @@
             android:textColor="#000000"/>
     </LinearLayout>
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/editText_ip"
         android:layout_width="match_parent"
         android:layout_height="45dp"
@@ -55,6 +55,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="5dp"
         android:padding="5dp"
+        android:selectAllOnFocus="true"
         android:text=""
         android:textColor="#000000"
         android:textSize="19sp"

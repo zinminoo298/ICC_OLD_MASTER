@@ -27,6 +27,8 @@ class DatabaseHandler(val context: Context) {
         var ViewShelf = ArrayList<ViewShelfModel>()
         var ViewSearch = ArrayList<ViewSearchModel>()
         var ViewFilter = ArrayList<ViewFilterSearchModel>()
+        var ViewItem = ArrayList<ItemModel>()
+        var IpList = ArrayList<String>()
         var description = ""
         var prod = ""
         var cat = ""
@@ -69,6 +71,7 @@ class DatabaseHandler(val context: Context) {
         var searchTotal = ""
         var searchQty = ""
         var searchPrice=""
+        var multipleProd = false
     }
 
     /*Open database and start copying database from assets folder*/
@@ -357,13 +360,30 @@ class DatabaseHandler(val context: Context) {
         println(CheckStockSetup.prod)
         val cursor = db.rawQuery(query,null)
         if(cursor.moveToFirst()){
-            prod = cursor.getString(0)
-            item = cursor.getString(1)
-            cat = cursor.getString(3)
-            price = cursor.getString(4)
-            s_price = cursor.getString(5)
-            description = cursor.getString(6)
-            addBarcode(handcode,barcode,qty,date,check,cust,corner,shelf)
+            println("count ; "+cursor.count)
+            if(cursor.count>1){
+                ViewItem.clear()
+                do{
+                    val data = ItemModel(cursor.getString(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        cursor.getString(6))
+                    ViewItem.add(data)
+                }while (cursor.moveToNext())
+                multipleProd = true
+            }else{
+                multipleProd = false
+                prod = cursor.getString(0)
+                item = cursor.getString(1)
+                cat = cursor.getString(3)
+                price = cursor.getString(4)
+                s_price = cursor.getString(5)
+                description = cursor.getString(6)
+                addBarcode(handcode,barcode,qty,date,check,cust,corner,shelf)
+            }
         }
         else{
             val query1 = "SELECT * FROM master WHERE Product_Code='$barcode' AND Business_Product = '${CheckStockSetup.prod}'"
@@ -755,6 +775,35 @@ class DatabaseHandler(val context: Context) {
         }
         cursor.close()
         cursor1.close()
+        db.close()
+    }
+
+    fun saveIp(ip:String){
+        val db = context.openOrCreateDatabase(REAL_DATABASE,Context.MODE_PRIVATE,null)
+        val values = ContentValues()
+        values.put("ip",ip)
+        db.insertWithOnConflict("ip_address",null,values,SQLiteDatabase.CONFLICT_IGNORE)
+        db.close()
+    }
+
+    fun getIp(){
+        val db = context.openOrCreateDatabase(REAL_DATABASE, Context.MODE_PRIVATE, null)
+        val query = "SELECT * FROM ip_address"
+        val cursor = db.rawQuery(query,null)
+        if(cursor.moveToFirst()){
+            IpList.clear()
+            do{
+                IpList.add(cursor.getString(0))
+            }
+            while(cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+    }
+
+    fun deleteIp(ip:String){
+        val db = context.openOrCreateDatabase(REAL_DATABASE, Context.MODE_PRIVATE, null)
+        db.execSQL("DELETE FROM ip_address WHERE ip = '$ip'")
         db.close()
     }
 

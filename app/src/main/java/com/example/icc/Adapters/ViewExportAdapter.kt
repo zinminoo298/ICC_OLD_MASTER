@@ -121,6 +121,7 @@ class ViewExportAdapter(
 //            recycler.removeViewAt(position)
             notifyItemRemoved(position)
             notifyItemRangeChanged(position, Dataset.size)
+            notifyItemRemoved(position)
             dialog.dismiss()
         }
 

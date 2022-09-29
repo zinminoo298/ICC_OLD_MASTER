@@ -4,13 +4,14 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.AsyncTask
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.icc.Adapters.ViewExportAdapter
@@ -20,6 +21,7 @@ import org.apache.commons.net.ftp.FTPClient
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class Export : AppCompatActivity() {
     companion object{
@@ -534,6 +536,58 @@ class Export : AppCompatActivity() {
         }
 
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
+        super.onActivityResult(requestCode, resultCode, intent)
+        if (requestCode == 1000 && resultCode == Activity.RESULT_OK) {
+            if (intent != null) {
+                if(intent.clipData != null){
+                    val files = ArrayList<Uri>()
+                    for(i in 0 until intent.clipData!!.itemCount){
+                        files.add(intent.clipData!!.getItemAt(i).uri)
+                    }
+                    println(files.size)
+                    val share = Intent.createChooser(Intent().apply {
+                        action = Intent.ACTION_SEND_MULTIPLE
+                        type = "*/*"
+                        putParcelableArrayListExtra(Intent.EXTRA_STREAM,files)
+                        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    }, "Share")
+                    startActivity(share)
+                }
+                else{
+                    val share = Intent.createChooser(Intent().apply {
+                        action = Intent.ACTION_SEND
+                        type = "*/*"
+                        data = intent.data
+                        println(data)
+                        putExtra(Intent.EXTRA_STREAM, intent.data)
+                        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    }, "Share")
+                    startActivity(share)
+                }
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id: Int = item.itemId
+        if (id == R.id.btn_share) {
+            val galleryIntent = Intent().apply {
+                action = Intent.ACTION_GET_CONTENT
+                type = "File/csv"
+                putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("*/*"))
+                putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            }
+            startActivityForResult(galleryIntent, 1000)        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun loadDevice() {
         var prefs = getSharedPreferences("device", Activity.MODE_PRIVATE)
         device_name = prefs.getString("valdev", "").toString()

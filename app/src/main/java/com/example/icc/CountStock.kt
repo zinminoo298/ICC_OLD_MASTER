@@ -13,6 +13,10 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.icc.Adapters.ItemAdapter
+import com.example.icc.Adapters.ViewShelfAdapter
 import com.example.icc.DataBase.DatabaseHandler
 
 class CountStock : AppCompatActivity() {
@@ -198,49 +202,58 @@ class CountStock : AppCompatActivity() {
                     scannedBarcode = editTextBarcode.text.toString()
 //                    editTextBarcode.text.clear()
                     db.loadBarcode(
-                        CheckStockSetup.h,
-                        scannedBarcode,
-                        editTextQty.text.toString(),
-                        "${CheckStockSetup.date}",
-                        "H",
-                        "${CheckStockSetup.cust}",
-                        "${CheckStockSetup.c}",
-                        "${CheckStockSetup.s}"
+                            CheckStockSetup.h,
+                            scannedBarcode,
+                            editTextQty.text.toString(),
+                            "${CheckStockSetup.date}",
+                            "H",
+                            "${CheckStockSetup.cust}",
+                            "${CheckStockSetup.c}",
+                            "${CheckStockSetup.s}"
                     )
-                    println(DatabaseHandler.currentQty)
-                    textViewDesc.text = "${DatabaseHandler.description}"
-                    textViewItem.text = "${DatabaseHandler.prod}${DatabaseHandler.item}"
-                    textViewPrice.text = "${DatabaseHandler.price}"
-                    textViewQty.text = "${DatabaseHandler.currentQty}"
 
-                    if (DatabaseHandler.prod == "Master Not Found") {
-                        val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
-                        toneGen1.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 2000)
-                        NewItemDialog()
-                    } else {
-                        db.getAll()
-                        db.getBP()
-                        db.getSH()
-
-                        textViewAllRec.text = "${DatabaseHandler.allRec}"
-                        textViewAllQty.text = "${DatabaseHandler.allQty}"
-                        textViewAllAmount.text = "${DatabaseHandler.allAmount}"
-                        textViewBpRec.text = "${DatabaseHandler.bpRec}"
-                        textViewBpQty.text = "${DatabaseHandler.bpQty}"
-                        textViewBpAmount.text = "${DatabaseHandler.bpAmount}"
-                        textViewShRec.text = "${DatabaseHandler.shRec}"
-                        textViewShQty.text = "${DatabaseHandler.shQty}"
-                        textViewShAmount.text = "${DatabaseHandler.shAmount}"
-
+                    if(DatabaseHandler.multipleProd){
+                        itemDialog()
                     }
-                    if (checkBox.isChecked) {
-                        editTextBarcode.nextFocusDownId= editTextQty.id
-                        editTextQty.requestFocus()
-                    } else {
-                        editTextBarcode.requestFocus()
-                        editTextBarcode.selectAll()
-                        editTextBarcode.nextFocusDownId= editTextBarcode.id
+                    else{
+                        if (DatabaseHandler.prod == "Master Not Found") {
+                            val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
+                            toneGen1.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 2000)
+                            NewItemDialog()
+                        } else {
+                            println(DatabaseHandler.currentQty)
+                            textViewDesc.text = "${DatabaseHandler.description}"
+                            textViewItem.text = "${DatabaseHandler.prod}${DatabaseHandler.item}"
+                            textViewPrice.text = "${DatabaseHandler.price}"
+                            textViewQty.text = "${DatabaseHandler.currentQty}"
+
+                            db.getAll()
+                            db.getBP()
+                            db.getSH()
+
+                            textViewAllRec.text = "${DatabaseHandler.allRec}"
+                            textViewAllQty.text = "${DatabaseHandler.allQty}"
+                            textViewAllAmount.text = "${DatabaseHandler.allAmount}"
+                            textViewBpRec.text = "${DatabaseHandler.bpRec}"
+                            textViewBpQty.text = "${DatabaseHandler.bpQty}"
+                            textViewBpAmount.text = "${DatabaseHandler.bpAmount}"
+                            textViewShRec.text = "${DatabaseHandler.shRec}"
+                            textViewShQty.text = "${DatabaseHandler.shQty}"
+                            textViewShAmount.text = "${DatabaseHandler.shAmount}"
+
+                        }
+                        if (checkBox.isChecked) {
+                            editTextBarcode.nextFocusDownId= editTextQty.id
+                            editTextQty.requestFocus()
+                        } else {
+                            editTextBarcode.requestFocus()
+                            editTextBarcode.selectAll()
+                            editTextBarcode.nextFocusDownId= editTextBarcode.id
+                        }
                     }
+
+
+
                 }
 //                val handler = Handler()
 //                handler.postDelayed(Runnable {
@@ -260,6 +273,65 @@ class CountStock : AppCompatActivity() {
                     scannedBarcode = editTextBarcode.text.toString()
 //                    editTextBarcode.text.clear()
                     db.loadBarcode(
+                            CheckStockSetup.h,
+                            scannedBarcode,
+                            editTextQty.text.toString(),
+                            "${CheckStockSetup.date}",
+                            "H",
+                            "${CheckStockSetup.cust}",
+                            "${CheckStockSetup.c}",
+                            "${CheckStockSetup.s}"
+                    )
+
+                    if(DatabaseHandler.multipleProd){
+                        itemDialog()
+                    }
+                    else{
+                        if (DatabaseHandler.prod == "Master Not Found") {
+                            val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
+                            toneGen1.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 2000)
+                            NewItemDialog()
+                        } else {
+                            println(DatabaseHandler.currentQty)
+                            textViewDesc.text = "${DatabaseHandler.description}"
+                            textViewItem.text = "${DatabaseHandler.prod}${DatabaseHandler.item}"
+                            textViewPrice.text = "${DatabaseHandler.price}"
+                            textViewQty.text = "${DatabaseHandler.currentQty}"
+
+                            db.getAll()
+                            db.getBP()
+                            db.getSH()
+
+                            textViewAllRec.text = "${DatabaseHandler.allRec}"
+                            textViewAllQty.text = "${DatabaseHandler.allQty}"
+                            textViewAllAmount.text = "${DatabaseHandler.allAmount}"
+                            textViewBpRec.text = "${DatabaseHandler.bpRec}"
+                            textViewBpQty.text = "${DatabaseHandler.bpQty}"
+                            textViewBpAmount.text = "${DatabaseHandler.bpAmount}"
+                            textViewShRec.text = "${DatabaseHandler.shRec}"
+                            textViewShQty.text = "${DatabaseHandler.shQty}"
+                            textViewShAmount.text = "${DatabaseHandler.shAmount}"
+                            if (checkBox.isChecked) {
+                                editTextQty.requestFocus()
+                                editTextQty.selectAll()
+                            } else {
+                                editTextBarcode.selectAll()
+                                editTextBarcode.requestFocus()
+                            }
+                        }
+                    }
+                }
+            }
+            false
+        })
+
+        buttonOk.setOnClickListener {
+            if (editTextBarcode.text.toString() == "") {
+                Toast.makeText(this, "Please Enter Barcode", Toast.LENGTH_SHORT).show()
+            } else {
+                scannedBarcode = editTextBarcode.text.toString()
+//                editTextBarcode.text.clear()
+                db.loadBarcode(
                         CheckStockSetup.h,
                         scannedBarcode,
                         editTextQty.text.toString(),
@@ -268,18 +340,23 @@ class CountStock : AppCompatActivity() {
                         "${CheckStockSetup.cust}",
                         "${CheckStockSetup.c}",
                         "${CheckStockSetup.s}"
-                    )
-                    println(DatabaseHandler.currentQty)
-                    textViewDesc.text = "${DatabaseHandler.description}"
-                    textViewItem.text = "${DatabaseHandler.prod}${DatabaseHandler.item}"
-                    textViewPrice.text = "${DatabaseHandler.price}"
-                    textViewQty.text = "${DatabaseHandler.currentQty}"
+                )
 
-                    if (DatabaseHandler.prod == "Master Not Found") {
+                if(DatabaseHandler.multipleProd){
+                    itemDialog()
+                }
+                else{
+                    if(DatabaseHandler.prod == "Master Not Found"){
                         val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
                         toneGen1.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 2000)
                         NewItemDialog()
-                    } else {
+                    }
+                    else{
+                        textViewDesc.text = "${DatabaseHandler.description}"
+                        textViewItem.text = "${DatabaseHandler.prod}${DatabaseHandler.item}"
+                        textViewPrice.text = "${DatabaseHandler.price}"
+                        textViewQty.text = "${DatabaseHandler.currentQty}"
+
                         db.getAll()
                         db.getBP()
                         db.getSH()
@@ -297,70 +374,99 @@ class CountStock : AppCompatActivity() {
                             editTextQty.requestFocus()
                             editTextQty.selectAll()
                         } else {
-                            editTextBarcode.selectAll()
                             editTextBarcode.requestFocus()
+                            editTextBarcode.selectAll()
                         }
                     }
                 }
-            }
-            false
-        })
-
-        buttonOk.setOnClickListener {
-            if (editTextBarcode.text.toString() == "") {
-                Toast.makeText(this, "Please Enter Barcode", Toast.LENGTH_SHORT).show()
-            } else {
-                scannedBarcode = editTextBarcode.text.toString()
-//                editTextBarcode.text.clear()
-                db.loadBarcode(
-                    CheckStockSetup.h,
-                    scannedBarcode,
-                    editTextQty.text.toString(),
-                    "${CheckStockSetup.date}",
-                    "H",
-                    "${CheckStockSetup.cust}",
-                    "${CheckStockSetup.c}",
-                    "${CheckStockSetup.s}"
-                )
-                textViewDesc.text = "${DatabaseHandler.description}"
-                textViewItem.text = "${DatabaseHandler.prod}${DatabaseHandler.item}"
-                textViewPrice.text = "${DatabaseHandler.price}"
-                textViewQty.text = "${DatabaseHandler.currentQty}"
-
-                if(DatabaseHandler.prod == "Master Not Found"){
-                    val toneGen1 = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
-                    toneGen1.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 2000)
-                    NewItemDialog()
-                }
-                else{
-                    db.getAll()
-                    db.getBP()
-                    db.getSH()
-
-                    textViewAllRec.text = "${DatabaseHandler.allRec}"
-                    textViewAllQty.text = "${DatabaseHandler.allQty}"
-                    textViewAllAmount.text = "${DatabaseHandler.allAmount}"
-                    textViewBpRec.text = "${DatabaseHandler.bpRec}"
-                    textViewBpQty.text = "${DatabaseHandler.bpQty}"
-                    textViewBpAmount.text = "${DatabaseHandler.bpAmount}"
-                    textViewShRec.text = "${DatabaseHandler.shRec}"
-                    textViewShQty.text = "${DatabaseHandler.shQty}"
-                    textViewShAmount.text = "${DatabaseHandler.shAmount}"
-                    if (checkBox.isChecked) {
-                        editTextQty.requestFocus()
-                        editTextQty.selectAll()
-                    } else {
-                        editTextBarcode.requestFocus()
-                        editTextBarcode.selectAll()
-                    }
-                }
-
             }
         }
     }
 
     fun toast(){
         Toast.makeText(this,"No Data",Toast.LENGTH_SHORT).show()
+    }
+
+    fun itemDialog(){
+        val builder = AlertDialog.Builder(this)
+
+        val inflater = this.layoutInflater
+        val view = inflater.inflate(R.layout.item_list, null)
+        builder.setView(view)
+        dialog = builder.create()
+        dialog.setMessage("Choose product code")
+        dialog.show()
+        dialog.setCancelable(false)
+
+        val buttonOk = view.findViewById<Button>(R.id.btn_OK)
+        val buttonCancel = view.findViewById<Button>(R.id.btn_Cancel)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view_items)
+
+        val viewManager = LinearLayoutManager(this)
+        val viewAdapter = ItemAdapter(DatabaseHandler.ViewItem, this)
+
+        recyclerView.apply {
+
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            adapter = viewAdapter
+
+        }
+        buttonOk.setOnClickListener {
+
+            if(ItemAdapter.row_index == -1){
+                Toast.makeText(this,"Please choose one product code",Toast.LENGTH_SHORT).show()
+            }
+            else {
+                db.addBarcode(
+                        CheckStockSetup.h,
+                        scannedBarcode,
+                        editTextQty.text.toString(),
+                        "${CheckStockSetup.date}",
+                        "H",
+                        "${CheckStockSetup.cust}",
+                        "${CheckStockSetup.c}",
+                        "${CheckStockSetup.s}"
+                )
+                dialog.dismiss()
+                
+                textViewDesc.text = "${DatabaseHandler.description}"
+                textViewItem.text = "${DatabaseHandler.prod}${DatabaseHandler.item}"
+                textViewPrice.text = "${DatabaseHandler.price}"
+                textViewQty.text = "${DatabaseHandler.currentQty}"
+
+                db.getAll()
+                db.getBP()
+                db.getSH()
+
+                textViewAllRec.text = "${DatabaseHandler.allRec}"
+                textViewAllQty.text = "${DatabaseHandler.allQty}"
+                textViewAllAmount.text = "${DatabaseHandler.allAmount}"
+                textViewBpRec.text = "${DatabaseHandler.bpRec}"
+                textViewBpQty.text = "${DatabaseHandler.bpQty}"
+                textViewBpAmount.text = "${DatabaseHandler.bpAmount}"
+                textViewShRec.text = "${DatabaseHandler.shRec}"
+                textViewShQty.text = "${DatabaseHandler.shQty}"
+                textViewShAmount.text = "${DatabaseHandler.shAmount}"
+                if (checkBox.isChecked) {
+                    editTextQty.requestFocus()
+                    editTextQty.selectAll()
+                } else {
+                    editTextBarcode.requestFocus()
+                    editTextBarcode.selectAll()
+                }
+            }
+        }
+        buttonCancel.setOnClickListener {
+            dialog.dismiss()
+            if (checkBox.isChecked) {
+                editTextQty.requestFocus()
+                editTextQty.selectAll()
+            } else {
+                editTextBarcode.requestFocus()
+                editTextBarcode.selectAll()
+            }
+        }
     }
 
     fun NewItemDialog(){
@@ -393,17 +499,17 @@ class CountStock : AppCompatActivity() {
             }
             else{
                 db.addNew(
-                    CheckStockSetup.h,
-                    editTextBc.text.toString(),
-                    editTextQt.text.toString(),
-                    "${CheckStockSetup.date}",
-                    "H",
-                    "${CheckStockSetup.cust}",
-                    "${CheckStockSetup.c}",
-                    "${CheckStockSetup.s}",
-                    editTextItem.text.toString(),
-                    editTextPrc.text.toString(),
-                    editTextDesc.text.toString()
+                        CheckStockSetup.h,
+                        editTextBc.text.toString(),
+                        editTextQt.text.toString(),
+                        "${CheckStockSetup.date}",
+                        "H",
+                        "${CheckStockSetup.cust}",
+                        "${CheckStockSetup.c}",
+                        "${CheckStockSetup.s}",
+                        editTextItem.text.toString(),
+                        editTextPrc.text.toString(),
+                        editTextDesc.text.toString()
                 )
 
                 textViewDesc.text = editTextDesc.text.toString()
